@@ -1,0 +1,15 @@
+total 72
+drwxr-xr-x  14 tlemma  2021_heilbronn    476 Oct 23 17:06 .
+drwxr-xr-x  14 tlemma  2021_heilbronn    476 Oct 18 13:25 ..
+drwxr-xr-x  13 tlemma  2021_heilbronn    442 Oct 18 19:15 .git
+drwxr-xr-x   6 tlemma  2021_heilbronn    204 Oct 21 16:47 .vscode
+-rwxr-xr-x   1 tlemma  2021_heilbronn    106 Oct 23 14:05 compile_run.sh
+-rw-r--r--   1 tlemma  2021_heilbronn   1772 Oct 23 15:55 get_next_line_utils.c
+drwxr-xr-x  57 tlemma  2021_heilbronn   1938 Oct 23 13:13 libft
+-rw-r--r--   1 tlemma  2021_heilbronn   3050 Oct 23 16:03 main.c
+drwxr-xr-x   3 tlemma  2021_heilbronn    102 Oct 19 16:37 main.dSYM
+-rw-r--r--@  1 tlemma  2021_heilbronn      0 Oct 23 17:08 out.txt
+-rwxr-xr-x   1 tlemma  2021_heilbronn  13492 Oct 23 16:03 pipex
+drwxr-xr-x   3 tlemma  2021_heilbronn    102 Oct 23 13:33 pipex.dSYM
+-rw-r--r--   1 tlemma  2021_heilbronn   1215 Oct 23 15:16 pipex.h
+-rw-r--r--   1 tlemma  2021_heilbronn   1416 Oct 23 15:59 pipex_utils.c
