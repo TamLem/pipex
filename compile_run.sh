@@ -1,3 +1,4 @@
 rm pipex;
-gcc main.c pipex_utils.c ./libft/libft.a -o pipex;
-./pipex infile "ls -l" "grep pipex" outfile;
+gcc -Wall -Wextra -Werror main.c pipex_utils.c ./libft/libft.a -o pipex;
+./pipex main.c "cat -e" "grep pipex" outfile;
+open outfile;

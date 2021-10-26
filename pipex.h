@@ -6,7 +6,7 @@
 /*   By: tlemma <tlemma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/21 16:34:56 by tlemma            #+#    #+#             */
-/*   Updated: 2021/10/23 15:16:09 by tlemma           ###   ########.fr       */
+/*   Updated: 2021/10/26 17:20:53 by tlemma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <fcntl.h>
 #include <sys/wait.h>
 
 typedef struct	pipex_args

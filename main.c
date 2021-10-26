@@ -6,7 +6,7 @@
 /*   By: tlemma <tlemma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 15:01:14 by tlemma            #+#    #+#             */
-/*   Updated: 2021/10/23 16:03:42 by tlemma           ###   ########.fr       */
+/*   Updated: 2021/10/26 17:37:23 by tlemma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ char **ft_getpath(char *keypairs[], char *cmd)
 	return (path);
 }
 
-void	init_args(pipe_args *pa, int argc, char *argv[], char *envp[])
+void	init_args(pipe_args *pa, char *argv[], char *envp[])
 {
 	int		i;
 
@@ -68,12 +68,18 @@ void	init_args(pipe_args *pa, int argc, char *argv[], char *envp[])
 	pa->path2 = ft_getpath(envp, *(pa->cmd2));
 }
 
-void	child_p(int p, int fd[], pipe_args *pa, char **path)
+void	child_p(int p, int fd[], int fd_file[], pipe_args *pa, char **path)
 {
 	if (p == 1)
+	{
+		dup2(fd_file[0], STDIN_FILENO);
 		dup2(fd[1], STDOUT_FILENO);
+	}
 	if (p == 2)
+	{
 		dup2(fd[0], STDIN_FILENO);
+		dup2(fd_file[1], STDOUT_FILENO);
+	}
 	close(fd[0]);
 	close(fd[1]);
 	if (p == 1)
@@ -86,44 +92,32 @@ void	child_p(int p, int fd[], pipe_args *pa, char **path)
 
 int main(int argc, char *argv[], char *envp[])
 {
-	char	**path;
 	int		i;
 
 	if (argc < 5)
 		return (0);
 	i = 0;
 	pipe_args pa;
-	init_args(&pa, argc, argv, envp);
-	// printf("%s\n", pa.cmd2[2]);
-	// return 0;
-	int fd[2]; // fd[0] = read , fd[1] = write
+	init_args(&pa, argv, envp);
+	int fd_file[2];
+	fd_file[0] = open(pa.infile, O_RDONLY);
+	fd_file[1] = open(pa.outfile, O_RDWR);
+ 	int fd[2]; // fd[0] = read , fd[1] = write
 	if (pipe(fd) == -1)
 		printf("Error with opening the pipe.\n");
 	int pid1 = fork();
 	if (pid1 < 0)
 		printf("Error with forking!");
 	if (pid1 == 0)
-	{
-		child_p(1, fd, &pa, pa.path1);
-	}
-	
+		child_p(1, fd, fd_file, &pa, pa.path1);
 	int pid2 = fork();
 	if (pid2 < 0)
 		return (3);
 	if (pid2 == 0)
-	{
-		child_p(2, fd, &pa, pa.path2);
-		// path = ft_getpath(envp, pa.cmd2[0]);
-		// dup2(fd[0], STDIN_FILENO);
-		// close(fd[1]);
-		// close(fd[0]);
-		// while(execve(*path++, pa.cmd2, NULL) && *path);
-		// printf("Error occured");
-	}
+		child_p(2, fd, fd_file, &pa, pa.path2);
 	close(fd[0]);
 	close(fd[1]);
 	waitpid(pid1, NULL, 0);
 	waitpid(pid2, NULL, 0);
-
 	return (0);
 }
