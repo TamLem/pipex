@@ -6,7 +6,7 @@
 /*   By: tlemma <tlemma@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 15:01:14 by tlemma            #+#    #+#             */
-/*   Updated: 2021/10/26 17:37:23 by tlemma           ###   ########.fr       */
+/*   Updated: 2021/10/27 20:15:54 by tlemma           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,29 +90,38 @@ void	child_p(int p, int fd[], int fd_file[], pipe_args *pa, char **path)
 	printf("Error occured");
 }
 
+void 	err_check(int res, char c, char *info)
+{
+	if (res >= 0)
+		return ;
+	if (c == 'a')
+		printf("usage: %s infile \"cmd1\" \"cmd2\" outfile", info);
+	if (c == 'f')
+		perror(info);
+	if (c == 'p')
+		perror("pipe");
+	if (c == 'k')
+		perror("fork");
+	exit (-1);
+}
+
 int main(int argc, char *argv[], char *envp[])
 {
-	int		i;
+	int fd_file[2];
+ 	int fd[2]; // fd[0] = read , fd[1] = write
+	int	pid1;
+	int pid2;
 
-	if (argc < 5)
-		return (0);
-	i = 0;
+	err_check(argc == 5, 'a', argv[0]);
 	pipe_args pa;
 	init_args(&pa, argv, envp);
-	int fd_file[2];
-	fd_file[0] = open(pa.infile, O_RDONLY);
-	fd_file[1] = open(pa.outfile, O_RDWR);
- 	int fd[2]; // fd[0] = read , fd[1] = write
-	if (pipe(fd) == -1)
-		printf("Error with opening the pipe.\n");
-	int pid1 = fork();
-	if (pid1 < 0)
-		printf("Error with forking!");
+	err_check(fd_file[0] = open(pa.infile, O_RDONLY), 'f', argv[1]);
+	err_check(fd_file[1] = open(pa.outfile, O_RDWR | O_CREAT, S_IRWXU), 'f', argv[4]);
+	err_check(pipe(fd), 'p',  NULL);
+	err_check(pid1 = fork(), 'k', NULL);
 	if (pid1 == 0)
 		child_p(1, fd, fd_file, &pa, pa.path1);
-	int pid2 = fork();
-	if (pid2 < 0)
-		return (3);
+	err_check(pid2 = fork(), 'k', NULL);
 	if (pid2 == 0)
 		child_p(2, fd, fd_file, &pa, pa.path2);
 	close(fd[0]);
